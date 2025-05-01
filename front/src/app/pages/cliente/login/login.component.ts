@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -25,28 +26,41 @@ togglePasswordVisibility() {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  login() {
-    this.error = '';
-    this.http.post<{ access_token: string }>('http://localhost:3000/users/login', {
-      email: this.email,
-      password: this.password
-    }).subscribe({
-      next: (res) => {
-        localStorage.setItem('token', res.access_token);
+  
+login() {
+  this.error = '';
+  this.http.post<{ access_token: string }>('http://localhost:3000/users/login', {
+    email: this.email,
+    password: this.password
+  }).subscribe({
+    next: (res) => {
+      localStorage.setItem('token', res.access_token);
 
-        const payload = JSON.parse(atob(res.access_token.split('.')[1]));
-        localStorage.setItem('rol', payload.role);
-        localStorage.setItem('usuario_id', payload.id); // opcional para ordenes
+      const payload = JSON.parse(atob(res.access_token.split('.')[1]));
+      localStorage.setItem('rol', payload.role);
+      localStorage.setItem('usuario_id', payload.id);
 
-        if (payload.role === 'admin') {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/home']);
-        }
-      },
-      error: () => {
-        this.error = 'Credenciales incorrectas';
+      // ✅ Notificación tipo toast
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Inicio de sesión exitoso',
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true
+      });
+
+      if (payload.role === 'admin') {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/home']);
       }
-    });
-  }
+    },
+    error: () => {
+      this.error = 'Credenciales incorrectas';
+      Swal.fire('Error', 'Credenciales incorrectas', 'error');
+    }
+  });
+}
 }

@@ -6,8 +6,6 @@ import { OrdenService } from '../../../services/ordenes.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-
-
 @Component({
   selector: 'app-carrito',
   standalone: true,
@@ -20,13 +18,15 @@ export class CarritoComponent implements OnInit {
   session_id: string = '';
   ordenConfirmada: any = null;
 
-
-  constructor(private carritoService: CarritoService, private ordenService: OrdenService, private router: Router) { }
+  constructor(
+    private carritoService: CarritoService,
+    private ordenService: OrdenService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.session_id = localStorage.getItem('session_id') || this.generarSessionId();
-
-  this.obtenerCarrito();
+    this.obtenerCarrito();
   }
 
   generarSessionId(): string {
@@ -42,22 +42,58 @@ export class CarritoComponent implements OnInit {
   }
 
   eliminarItem(id: number) {
-    this.carritoService.eliminarItem(id).subscribe(() => {
-      this.obtenerCarrito();
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Se eliminará este producto del carrito',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.carritoService.eliminarItem(id).subscribe(() => {
+          this.obtenerCarrito();
+          Swal.fire({
+            icon: 'success',
+            title: 'Eliminado',
+            text: 'Producto eliminado del carrito.',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        });
+      }
     });
   }
 
   vaciarCarrito() {
-    this.carritoService.vaciarCarrito(this.session_id).subscribe(() => {
-      this.obtenerCarrito();
+    Swal.fire({
+      title: '¿Vaciar todo el carrito?',
+      text: 'Todos los productos serán eliminados.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, vaciar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.carritoService.vaciarCarrito(this.session_id).subscribe(() => {
+          this.obtenerCarrito();
+          Swal.fire({
+            icon: 'success',
+            title: 'Carrito vaciado',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        });
+      }
     });
   }
 
   calcularTotal(): number {
-    return this.carrito.items.reduce((acc: number, item: any) => acc + item.cantidad * item.producto.precio, 0);
+    return this.carrito.items.reduce(
+      (acc: number, item: any) => acc + item.cantidad * item.producto.precio,
+      0
+    );
   }
-
-  
 
   generarOrden() {
     const session_id = localStorage.getItem('session_id');
@@ -69,7 +105,7 @@ export class CarritoComponent implements OnInit {
       });
       return;
     }
-  
+
     this.ordenService.crearOrden({ session_id }).subscribe({
       next: (orden) => {
         localStorage.setItem('orden_generada', JSON.stringify(orden));
@@ -84,6 +120,4 @@ export class CarritoComponent implements OnInit {
       }
     });
   }
-  
-
 }

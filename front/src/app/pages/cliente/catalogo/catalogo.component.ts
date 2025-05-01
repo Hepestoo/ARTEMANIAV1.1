@@ -94,29 +94,41 @@ export class CatalogoComponent implements OnInit {
       return;
     }
   
-    const session_id = localStorage.getItem('session_id')!;
+    Swal.fire({
+      title: `¿Agregar ${producto.nombre} al carrito?`,
+      text: `Cantidad: ${cantidad}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, agregar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const session_id = localStorage.getItem('session_id')!;
   
-    this.carritoService.agregarProducto(producto.id, cantidad, session_id).subscribe({
-      next: () => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Agregado al carrito',
-          text: `${producto.nombre} fue añadido correctamente.`,
-          showConfirmButton: false,
-          timer: 1800
-        });
-        this.cantidades[producto.id] = 1;
-        this.carritoService.refrescarCantidad();
-      },
-      error: () => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al agregar el producto al carrito.',
+        this.carritoService.agregarProducto(producto.id, cantidad, session_id).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Producto agregado',
+              text: `${producto.nombre} fue añadido correctamente al carrito.`,
+              showConfirmButton: false,
+              timer: 1600
+            });
+            this.cantidades[producto.id] = 1;
+            this.carritoService.refrescarCantidad();
+          },
+          error: () => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ocurrió un error al agregar el producto al carrito.',
+            });
+          }
         });
       }
     });
   }
+  
   
 
   // Paginación
