@@ -137,3 +137,55 @@
   color: #771379;
 }
 
+/* --- NUEVO: Estilos para las pestañas de Login/Registro --- */
+.form-toggle {
+  display: flex;
+  margin-bottom: 1.5rem;
+  /* Usamos un borde un poco más oscuro que el fondo de la tarjeta */
+  border: 1px solid #e0dbca; 
+  border-radius: 8px;
+  overflow: hidden;
+
+  button {
+    flex: 1; // Ocupa el 50%
+    padding: 0.8rem 1rem;
+    border: none;
+    /* Un color de fondo inactivo que va bien con #FAF6E6 */
+    background-color: #f1ede0; 
+    color: #555;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    // Estilo del botón activo
+    &.active {
+      background-color: purple; /* ¡Coincide con tu botón de submit! */
+      color: white;
+    }
+
+    &:not(.active):hover {
+      background-color: #e9e4d1; /* Un hover suave para el inactivo */
+    }
+  }
+}
+
+/* --- NUEVO: Estilos para el texto 'Crear cuenta' / 'Iniciar sesión' --- */
+.form-footer-prompt {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #333; // Color de texto normal
+
+  span {
+    font-weight: 600;
+    color: purple; // Tu color de marca
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+  }
+}

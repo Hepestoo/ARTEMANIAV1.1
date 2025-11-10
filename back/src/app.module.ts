@@ -21,9 +21,26 @@ import { TelegramModule } from './telegram/telegram.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: (configService: ConfigService) => {
+    const dbUrl = configService.get<string>('DATABASE_URL');
+
+    if (dbUrl) {
+      // --- CONFIGURACIÓN PARA RENDER (Producción) ---
+      // Render (y otros) requieren SSL para conexiones externas
+      return {
+        type: 'postgres',
+        url: dbUrl, // <-- Usa la URL de Render
+        autoLoadEntities: true,
+        synchronize: true, // Cuidado con synchronize en producción
+        ssl: {
+          rejectUnauthorized: false, // Necesario para Render
+        },
+      };
+    } else {
+      // --- CONFIGURACIÓN PARA LOCAL (Desarrollo) ---
+      return {
         type: 'postgres',
         host: configService.get<string>('DB_HOST'),
         port: parseInt(configService.get<string>('DB_PORT')),
@@ -32,8 +49,10 @@ import { TelegramModule } from './telegram/telegram.module';
         database: configService.get<string>('DB_NAME'),
         autoLoadEntities: true,
         synchronize: true,
-      }),
-    }),
+      };
+    }
+  },
+}),
     UsersModule,
     CategoriasModule,
     SubcategoriasModule,
