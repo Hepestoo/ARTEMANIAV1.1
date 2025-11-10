@@ -6,6 +6,9 @@ import { OrdenService } from '../../../services/ordenes.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
+// --- PASO 1: Importa el environment ---
+import { environment } from '../../../../environments/environments';
+
 @Component({
   selector: 'app-carrito',
   standalone: true,
@@ -17,6 +20,9 @@ export class CarritoComponent implements OnInit {
   carrito: any = { items: [] };
   session_id: string = '';
   ordenConfirmada: any = null;
+
+  // --- PASO 2: Haz pública la URL de la API para el HTML ---
+  public apiUrl = environment.apiUrl;
 
   constructor(
     private carritoService: CarritoService,
@@ -36,6 +42,7 @@ export class CarritoComponent implements OnInit {
   }
 
   obtenerCarrito() {
+    // Esto ya está corregido gracias a que arreglamos el carrito.service
     this.carritoService.getCarrito(this.session_id).subscribe((res) => {
       this.carrito = res;
     });
@@ -44,6 +51,7 @@ export class CarritoComponent implements OnInit {
   eliminarItem(id: number) {
     Swal.fire({
       title: '¿Estás seguro?',
+// ... (resto del código sin cambios)
       text: 'Se eliminará este producto del carrito',
       icon: 'warning',
       showCancelButton: true,
@@ -68,6 +76,7 @@ export class CarritoComponent implements OnInit {
   vaciarCarrito() {
     Swal.fire({
       title: '¿Vaciar todo el carrito?',
+// ... (resto del código sin cambios)
       text: 'Todos los productos serán eliminados.',
       icon: 'warning',
       showCancelButton: true,
@@ -97,6 +106,7 @@ export class CarritoComponent implements OnInit {
 
   generarOrden() {
     const session_id = localStorage.getItem('session_id');
+// ... (resto del código sin cambios)
     if (!session_id) {
       Swal.fire({
         icon: 'error',
@@ -106,6 +116,7 @@ export class CarritoComponent implements OnInit {
       return;
     }
 
+    // Esto ya está corregido gracias a que arreglamos el ordenes.service
     this.ordenService.crearOrden({ session_id }).subscribe({
       next: (orden) => {
         localStorage.setItem('orden_generada', JSON.stringify(orden));

@@ -12,7 +12,12 @@
       <div class="producto" *ngFor="let item of carrito.items">
         <p class="alerta">Este producto puede estar sujeto a cambios</p>
         <div class="producto-info">
-          <img [src]="'http://localhost:3000/uploads/productos/' + item.producto.imagen_url" alt="Producto">
+          
+          <!-- #################################### -->
+          <!--           LÍNEA CORREGIDA            -->
+          <!-- #################################### -->
+          <img [src]="apiUrl + '/uploads/productos/' + item.producto.imagen_url" alt="Producto">
+          
           <div class="detalles">
             <p class="nombre">{{ item.producto.nombre }}</p>
             <div class="acciones">
@@ -38,6 +43,7 @@
 
   <!-- Resumen y acciones siempre visibles -->
   <div class="carrito-resumen">
+// ... (resto del código sin cambios)
     <h3>Detalle de la compra</h3>
 
     <div class="resumen-productos" *ngIf="carrito.items.length > 0; else sinResumen">
@@ -55,6 +61,7 @@
     </ng-template>
 
     <div class="opciones-envio">
+// ... (resto del código sin cambios)
       <p><strong>Envío</strong></p>
       <label><input type="radio" name="envio"> Efectivo</label>
       <label><input type="radio" name="envio"> Recogida en el local</label>

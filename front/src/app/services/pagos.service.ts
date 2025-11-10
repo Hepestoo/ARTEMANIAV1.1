@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+
+// --- PASO 1: Importa el environment ---
+import { environment } from "../../environments/environments";
 
 export interface Pago {
   id: number;
@@ -16,7 +19,9 @@ export interface Pago {
 
 @Injectable({ providedIn: 'root' })
 export class PagosService {
-  private api = 'http://localhost:3000/pagos';
+  
+  // --- PASO 2: Construye la URL de la API dinámicamente ---
+  private api = `${environment.apiUrl}/pagos`;
 
   constructor(private http: HttpClient) {}
 
@@ -29,7 +34,8 @@ export class PagosService {
   }
   
   crearPago(data: any) {
-    return this.http.post('http://localhost:3000/pagos', data);
+    // --- PASO 3: Asegúrate de que TODAS las llamadas usen la variable 'api' ---
+    return this.http.post(this.api, data);
   }
   
 }

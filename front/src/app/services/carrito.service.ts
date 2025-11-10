@@ -4,12 +4,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { CarritoStateService } from './carrito-state.service';
 import { tap } from 'rxjs/operators';
 
+// --- PASO 1: Importa el environment ---
+import { environment } from '../../environments/environments';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarritoService {
-  private apiUrl = 'http://localhost:3000/carrito';
+  
+  // --- PASO 2: Construye la URL de la API dinámicamente ---
+  private apiUrl = `${environment.apiUrl}/carrito`;
 
   // Observable para el contador
   private totalItemsSubject = new BehaviorSubject<number>(this.obtenerCantidadGuardada());

@@ -20,6 +20,7 @@
   <section class="catalogo">
     <!-- Filtros -->
     <aside class="filtros">
+// ... (resto del código sin cambios)
       <h3>Subcategorías</h3>
       <div class="subcategorias">
         <button
@@ -43,20 +44,27 @@
     <!-- Productos -->
     <div class="productos">
       <div class="header-productos">
+// ... (resto del código sin cambios)
         <p>{{ productos.length }} productos encontrados</p>
       </div>
   
       <div class="grid-productos">
         <div class="producto" *ngFor="let prod of productosPaginados">
           <div class="img-container">
+
+            <!-- #################################### -->
+            <!--           LÍNEA CORREGIDA            -->
+            <!-- #################################### -->
             <img
-              [src]="'http://localhost:3000/uploads/productos/' + prod.imagen_url"
+              [src]="apiUrl + '/uploads/productos/' + prod.imagen_url"
               alt="Producto"
             />
+
           </div>
           <h3>{{ prod.nombre }}</h3>
           <p>{{ prod.descripcion }}</p>
           <p>{{ prod.precio | currency }}</p>
+// ... (resto del código sin cambios)
           <p [style.color]="prod.stock > 0 ? 'green' : 'red'">
             {{ prod.stock > 0 ? 'Disponible' : 'No disponible' }}
           </p>
@@ -66,6 +74,7 @@
             <input
               type="number"
               min="1"
+// ... (resto del código sin cambios)
               [max]="prod.stock"
               [(ngModel)]="cantidades[prod.id]"
             />
@@ -82,6 +91,7 @@
   
       <!-- Paginación -->
       <div class="paginacion" *ngIf="paginas.length > 1">
+// ... (resto del código sin cambios)
         <button (click)="paginaAnterior()" [disabled]="paginaActual === 1">‹</button>
         <button
           *ngFor="let pagina of paginas"
@@ -94,4 +104,3 @@
       </div>
     </div>
   </section>
-  

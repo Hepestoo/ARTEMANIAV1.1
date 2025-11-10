@@ -2,6 +2,10 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
+// --- PASO 1: Importa el environment ---
+// La ruta es ../../ porque estamos en src/app/services/
+import { environment } from "../../environments/environments";
+
 export interface Subcategoria {
   id: number;
   nombre: string;
@@ -14,7 +18,9 @@ export interface Subcategoria {
 
 @Injectable({ providedIn: 'root' })
 export class SubcategoriaService {
-  private api = 'http://localhost:3000/subcategorias';
+  
+  // --- PASO 2: Construye la URL de la API dinámicamente ---
+  private api = `${environment.apiUrl}/subcategorias`;
 
   constructor(private http: HttpClient) {}
 

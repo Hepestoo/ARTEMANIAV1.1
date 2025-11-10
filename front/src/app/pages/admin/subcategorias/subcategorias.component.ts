@@ -5,6 +5,9 @@ import { SubcategoriaService } from "../../../services/subcategorias.service";
 import { HttpClient } from "@angular/common/http";
 import Swal from 'sweetalert2';
 
+// --- PASO 1: Importa el environment ---
+// Asumo 5 niveles (subcategorias -> admin -> pages -> app -> src)
+import { environment } from "../../../../environments/environments"; 
 
 
 @Component({
@@ -19,6 +22,7 @@ export class SubcategoriasComponent implements OnInit {
   categorias: any[] = [];
 
   nueva: {
+// ... (resto del código sin cambios)
     id: number | null;
     nombre: string;
     categoria_id: number;
@@ -28,6 +32,9 @@ export class SubcategoriasComponent implements OnInit {
     categoria_id: 0
   };
 
+  // --- PASO 2: Define la URL de la API ---
+  private apiUrl = environment.apiUrl;
+
   constructor(
     private http: HttpClient,
     private subcategoriaService: SubcategoriaService
@@ -35,18 +42,22 @@ export class SubcategoriasComponent implements OnInit {
 
   ngOnInit(): void {
     this.listar();
-    this.http.get('http://localhost:3000/categorias').subscribe((res: any) => {
+    
+    // --- PASO 3: Corrige la llamada hardcodeada ---
+    this.http.get(`${this.apiUrl}/categorias`).subscribe((res: any) => {
       this.categorias = res;
     });
   }
 
   listar() {
+    // Esta llamada ya está corregida porque usa el servicio que arreglamos
     this.subcategoriaService.listar().subscribe((res) => {
       this.subcategorias = res;
     });
   }
 
   guardar() {
+// ... (resto del código sin cambios)
     const dto = {
       nombre: this.nueva.nombre,
       categoria_id: +this.nueva.categoria_id
@@ -58,6 +69,7 @@ export class SubcategoriasComponent implements OnInit {
         this.reset();
         this.listar();
         Swal.fire({
+// ... (resto del código sin cambios)
           icon: 'success',
           title: 'Subcategoría creada',
           text: 'La subcategoría fue registrada correctamente.',
@@ -71,6 +83,7 @@ export class SubcategoriasComponent implements OnInit {
         this.reset();
         this.listar();
         Swal.fire({
+// ... (resto del código sin cambios)
           icon: 'success',
           title: 'Subcategoría actualizada',
           text: 'Los cambios se guardaron correctamente.',
@@ -83,6 +96,7 @@ export class SubcategoriasComponent implements OnInit {
 
   editar(sub: any) {
     this.nueva = {
+// ... (resto del código sin cambios)
       id: sub.id,
       nombre: sub.nombre,
       categoria_id: sub.categoria?.id ?? 0
@@ -91,6 +105,7 @@ export class SubcategoriasComponent implements OnInit {
 
   eliminar(id: number) {
     Swal.fire({
+// ... (resto del código sin cambios)
       title: '¿Estás seguro?',
       text: 'Esta acción eliminará la subcategoría permanentemente.',
       icon: 'warning',
@@ -109,6 +124,7 @@ export class SubcategoriasComponent implements OnInit {
 
   reset() {
     this.nueva = {
+// ... (resto del código sin cambios)
       id: null,
       nombre: '',
       categoria_id: 0

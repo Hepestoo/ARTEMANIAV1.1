@@ -2,9 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// --- PASO 1: Importa el environment ---
+import { environment } from '../../environments/environments';
+
 export interface Orden {
   id: number;
   usuario?: {
+    // ... (interfaz sin cambios)
     id: number;
     nombre: string;
     apellido: string;
@@ -37,7 +41,12 @@ export interface Orden {
   providedIn: 'root'
 })
 export class OrdenService {
-  private api = 'http://localhost:3000/ordenes';
+  
+  // --- PASO 2: Construye la URL de la API dinámicamente ---
+  private api = `${environment.apiUrl}/ordenes`;
+  
+  // --- PASO 3: Crea una variable para la API de Pagos (para el error de abajo) ---
+  private pagosApi = `${environment.apiUrl}/pagos`;
 
   constructor(private http: HttpClient) {}
 
@@ -71,7 +80,8 @@ export class OrdenService {
   }
   
   registrarPago(data: { orden_id: number, metodo: string, estado: string }) {
-    return this.http.post('http://localhost:3000/pagos', data);
+    // --- PASO 4: Corrige la URL que estaba escrita directamente ---
+    return this.http.post(this.pagosApi, data);
   }
 
   actualizarDatosCliente(id: number, data: { nombre_cliente: string, direccion: string, telefono: string }) {
